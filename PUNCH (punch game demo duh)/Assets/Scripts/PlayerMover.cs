@@ -19,24 +19,20 @@ public class PlayerMover : MonoBehaviour
 
     bool isMoving;
     string currentKey = "";
-
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
         rb.linearDamping = 0f; // No drag needed anymore
     }
-
     private void Update()
     {
         MyInputs();
     }
-
     private void FixedUpdate()
     {
         MovePlayer();
     }
-
     private void MovePlayer()
     {
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
@@ -53,8 +49,7 @@ public class PlayerMover : MonoBehaviour
             rb.linearVelocity = new Vector3(0f, rb.linearVelocity.y, 0f);
         }
     }
-
-    private void MyInputs()
+    private void MyInputs() // basic input handling
     {
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
@@ -67,9 +62,25 @@ public class PlayerMover : MonoBehaviour
         else if (Input.GetMouseButtonDown(1)) currentKey = "mouseRight";
         else currentKey = "";
 
+        if (Input.GetMouseButtonDown(0)) // punch test
+        {
+           
+            animator.SetTrigger("Jab");
+            Debug.Log("Jabbed");
+           
+        }
+
+        if (Input.GetMouseButtonDown(1)) // punch test
+        {
+
+            animator.SetTrigger("Hook");
+            Debug.Log("hook");
+
+        }
+
+
         UpdateAnimator();
     }
-
     private void UpdateAnimator()
     {
         animator.SetFloat("Horizontal", horizontalInput);
@@ -77,11 +88,11 @@ public class PlayerMover : MonoBehaviour
 
         if (isMoving)
         {
-            animator.SetBool("isMoving", true);
+            animator.SetBool("Moving", true);
         }
         else 
         { 
-            animator.SetBool("isMoving", false);
+            animator.SetBool("Moving", false);
         }
         Vector3 flatVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
         animator.SetFloat("Speed", flatVel.magnitude);
